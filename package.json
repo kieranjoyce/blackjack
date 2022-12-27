@@ -1,0 +1,24 @@
+{
+  "name": "blackjack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kieranjoyce/blackjack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kieranjoyce/blackjack/issues"
+  },
+  "homepage": "https://github.com/kieranjoyce/blackjack#readme",
+  "devDependencies": {
+    "jest": "^29.3.1"
+  }
+}
