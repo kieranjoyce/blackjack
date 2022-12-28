@@ -25,11 +25,38 @@ describe("Deck class", () => {
     }
   });
 
+  test("deck contains no duplicates", () => {
+    let includedCards = [];
     for (let card of deck.cards) {
-      expect(validSuits.includes(card.suit)).toBe(true);
-      expect(validValues.includes(card.value)).toBe(true);
+      let cardName = card.value + card.suit;
+      let isCardDuplicate = includedCards.includes(cardName);
+      expect(isCardDuplicate).toBe(false);
+      if (!isCardDuplicate) {
+        includedCards.push(cardName);
+      }
     }
   });
 
-  test("removeCard method removes a card from the deck and returns it", () => {});
+  test("takeCard method removes a random card from cards array and returns it", () => {
+    removedCard = deck.takeCard();
+
+    // tests whether card removed
+    expect(deck.cards.length).toBe(51);
+
+    // tests whether card returned
+    expect(removedCard).toMatchObject({
+      suit: expect.stringMatching(validSuits),
+      value: expect.stringMatching(validValues),
+    });
+
+    // tests that returned card is the same as removed card
+    let containsSameCard = false;
+    for (let card of deck.cards) {
+      if (card.suit === removedCard.suit && card.value === removedCard.value) {
+        containsSameCard = true;
+      }
+    }
+
+    expect(containsSameCard).toBe(false);
+  });
 });
