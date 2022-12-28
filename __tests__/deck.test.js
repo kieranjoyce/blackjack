@@ -8,6 +8,9 @@ beforeEach(() => {
 });
 
 describe("Deck class", () => {
+  const validSuits = /[♥♦♠♣]/;
+  const validValues = /[A23456789(10)JQK]/;
+
   test("deck is initialised with 52 cards", () => {
     expect(deck.cards).toHaveLength(52);
     for (let card of deck.cards) {
@@ -16,22 +19,11 @@ describe("Deck class", () => {
   });
 
   test("deck contains only standard cards", () => {
-    const validSuits = ["♥", "♦", "♠", "♣"];
-    const validValues = [
-      "A",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "7",
-      "8",
-      "9",
-      "10",
-      "J",
-      "Q",
-      "K",
-    ];
+    for (let card of deck.cards) {
+      expect(card.suit).toMatch(validSuits);
+      expect(card.value).toMatch(validValues);
+    }
+  });
 
     for (let card of deck.cards) {
       expect(validSuits.includes(card.suit)).toBe(true);
