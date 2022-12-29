@@ -32,6 +32,14 @@ class Deck {
       }
     }
   }
+
+  takeCard() {
+    let randomIndex = Math.floor(Math.random() * this.cards.length);
+    let deletedCards = this.cards.splice(randomIndex, 1);
+
+    console.log(this.cards);
+    return deletedCards[0];
+  }
 }
 
 module.exports = { Deck };
