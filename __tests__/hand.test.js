@@ -30,7 +30,7 @@ describe("Hand class", () => {
       expect(hand.score).toBe(5);
     });
 
-    test("should set score property to 10 when hand contains a single picture card (jack, queen or king)", () => {
+    test("should evaluate the score of a single picture card (jack, queen or king) as 10", () => {
       hand.addCard(new Card("♣", "K"));
       hand.evaluateScore();
 
@@ -41,6 +41,22 @@ describe("Hand class", () => {
       hand.addCard(new Card("♦", "8"));
       hand.addCard(new Card("♣", "3"));
       hand.addCard(new Card("♠", "J"));
+
+      hand.evaluateScore();
+      expect(hand.score).toBe(21);
+    });
+
+    test("should evaluate the score of a single ace as 11", () => {
+      hand.addCard(new Card("♠", "A"));
+
+      hand.evaluateScore();
+      expect(hand.score).toBe(11);
+    });
+
+    test("should evaluate the score of an ace that would lead to a bust score as 1", () => {
+      hand.addCard(new Card("♠", "K"));
+      hand.addCard(new Card("♣", "Q"));
+      hand.addCard(new Card("♥", "A"));
 
       hand.evaluateScore();
       expect(hand.score).toBe(21);
