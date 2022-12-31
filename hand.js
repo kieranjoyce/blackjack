@@ -17,13 +17,19 @@ class Hand {
       let isAce = card.value === "A";
 
       if (isAce) {
-        newScore += newScore + 11 < 21 ? 11 : 1;
+        newScore += newScore + 11 < 22 ? 11 : 1;
       } else {
         newScore += isPictureCard ? 10 : parseInt(card.value);
       }
     }
 
     this.score = newScore;
+  }
+
+  checkBust() {
+    if (this.score > 21) {
+      this.isBust = true;
+    }
   }
 }
 
