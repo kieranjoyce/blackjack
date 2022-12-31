@@ -8,7 +8,7 @@ beforeEach(() => {
 });
 
 describe("Hand class", () => {
-  test("should be initialised correct starting values", () => {
+  test("should be initialised with correct starting values", () => {
     expect(hand.cards.length).toBe(0);
     expect(hand.score).toBe(0);
     expect(hand.isBust).toBe(false);
@@ -59,7 +59,43 @@ describe("Hand class", () => {
       hand.addCard(new Card("♥", "A"));
 
       hand.evaluateScore();
+
       expect(hand.score).toBe(21);
     });
+
+    test("should correctly evaluate score of card combinations in other provided scenarios", () => {
+      hand.addCard(new Card("♠", "K"));
+      hand.addCard(new Card("♥", "A"));
+
+      hand.evaluateScore();
+
+      expect(hand.score).toBe(21);
+
+      hand = new Hand();
+
+      hand.addCard(new Card("♠", "9"));
+      hand.addCard(new Card("♣", "A"));
+      hand.addCard(new Card("♥", "A"));
+
+      hand.evaluateScore();
+
+      expect(hand.score).toBe(21);
+    });
+  });
+
+  test("checkBust method should set isBust property to true if score is 22 or more", () => {
+    hand.addCard(new Card("♠", "K"));
+    hand.addCard(new Card("♣", "Q"));
+
+    hand.evaluateScore();
+    hand.checkBust();
+    expect(hand.isBust).toBe(false);
+
+    hand.addCard(new Card("♥", "2"));
+
+    hand.evaluateScore();
+    hand.checkBust();
+
+    expect(hand.isBust).toBe(true);
   });
 });
