@@ -20,5 +20,8 @@
   "homepage": "https://github.com/kieranjoyce/blackjack#readme",
   "devDependencies": {
     "jest": "^29.3.1"
+  },
+  "dependencies": {
+    "inquirer": "^8.2.5"
   }
 }
