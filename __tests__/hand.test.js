@@ -1,5 +1,6 @@
 import Hand from "../hand";
 import Card from "../card";
+import { jest } from "@jest/globals";
 
 let hand;
 
@@ -80,6 +81,19 @@ describe("Hand class", () => {
       hand.evaluateScore();
 
       expect(hand.score).toBe(21);
+    });
+
+    test("should call checkBust method after score updated", () => {
+      let checkBustSpy = jest.spyOn(hand, "checkBust");
+
+      hand.addCard(new Card("♠", "K"));
+      hand.addCard(new Card("♥", "K"));
+      hand.addCard(new Card("♥", "2"));
+
+      hand.evaluateScore();
+
+      expect(checkBustSpy).toHaveBeenCalled();
+      expect(hand.isBust).toBe(true);
     });
   });
 

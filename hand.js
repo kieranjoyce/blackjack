@@ -24,6 +24,8 @@ export default class Hand {
     }
 
     this.score = newScore;
+
+    this.checkBust();
   }
 
   checkBust() {
