@@ -34,5 +34,14 @@ describe("Dealer class", () => {
 
       expect(takeCardMock).toHaveReturnedWith(dealtCard);
     });
+
+    test("should call hands evaluateScore method after card dealt", () => {
+      let evaluateScoreSpy = jest.spyOn(playersHand, "evaluateScore");
+
+      dealer.dealCard(playersHand);
+
+      expect(evaluateScoreSpy).toHaveBeenCalled();
+      expect(playersHand.score).not.toBe(0);
+    });
   });
 });

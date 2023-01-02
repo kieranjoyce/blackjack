@@ -8,5 +8,7 @@ export default class Dealer {
   dealCard(hand) {
     let removedCard = this.deck.takeCard();
     hand.addCard(removedCard);
+
+    hand.evaluateScore();
   }
 }
