@@ -1,4 +1,4 @@
-const { Card } = require("../card");
+import Card from "../card";
 
 describe("Card class", () => {
   test("returns an object with provided suit and value properties", () => {

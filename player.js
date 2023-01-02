@@ -1,6 +1,6 @@
-const { Hand } = require("./hand");
+import Hand from "./hand";
 
-class Player {
+export default class Player {
   constructor(name) {
     this.name = name;
     this.hand = new Hand();
@@ -16,5 +16,3 @@ class Player {
     this.wins++;
   }
 }
-
-module.exports = { Player };

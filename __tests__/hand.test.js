@@ -1,5 +1,5 @@
-const { Hand } = require("../hand");
-const { Card } = require("../card");
+import Hand from "../hand";
+import Card from "../card";
 
 let hand;
 

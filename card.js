@@ -1,8 +1,6 @@
-class Card {
+export default class Card {
   constructor(suit, value) {
     this.suit = suit;
     this.value = value;
   }
 }
-
-module.exports = { Card };

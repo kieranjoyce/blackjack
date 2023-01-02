@@ -1,4 +1,4 @@
-class Hand {
+export default class Hand {
   constructor() {
     this.cards = [];
     this.score = 0;
@@ -32,5 +32,3 @@ class Hand {
     }
   }
 }
-
-module.exports = { Hand };

@@ -1,7 +1,8 @@
-const { Dealer } = require("../dealer");
-const { Deck } = require("../deck");
-const { Hand } = require("../hand");
-const { Card } = require("../card");
+import Dealer from "../dealer";
+import Deck from "../deck";
+import Hand from "../hand";
+import Card from "../card";
+import { jest } from "@jest/globals";
 
 let dealer;
 let deck;

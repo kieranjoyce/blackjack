@@ -1,6 +1,6 @@
-const { Card } = require("./card");
+import Card from "./card";
 
-class Deck {
+export default class Deck {
   constructor() {
     this.cards = [];
 
@@ -40,5 +40,3 @@ class Deck {
     return deletedCards[0];
   }
 }
-
-module.exports = { Deck };

@@ -1,4 +1,4 @@
-class Dealer {
+export default class Dealer {
   constructor(deck) {
     this.deck = deck;
   }
@@ -8,5 +8,3 @@ class Dealer {
     hand.addCard(removedCard);
   }
 }
-
-module.exports = { Dealer };

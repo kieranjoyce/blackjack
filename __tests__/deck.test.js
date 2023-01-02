@@ -1,5 +1,5 @@
-const { Deck } = require("../deck");
-const { Card } = require("../card");
+import Deck from "../deck";
+import Card from "../card";
 
 let deck;
 
@@ -38,7 +38,7 @@ describe("Deck class", () => {
   });
 
   test("takeCard method removes a random card from cards array and returns it", () => {
-    removedCard = deck.takeCard();
+    let removedCard = deck.takeCard();
 
     // tests whether card removed
     expect(deck.cards.length).toBe(51);
