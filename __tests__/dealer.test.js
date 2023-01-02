@@ -9,8 +9,7 @@ let deck;
 let playersHand;
 
 beforeEach(() => {
-  deck = new Deck();
-  dealer = new Dealer(deck);
+  dealer = new Dealer();
   playersHand = new Hand();
 });
 
@@ -28,7 +27,7 @@ describe("Dealer class", () => {
     });
 
     test("card added to the hand and removed from the deck should be the same", () => {
-      let takeCardMock = jest.spyOn(deck, "takeCard");
+      let takeCardMock = jest.spyOn(dealer.deck, "takeCard");
 
       dealer.dealCard(playersHand);
       let dealtCard = playersHand.cards[0];

@@ -1,6 +1,8 @@
+import Deck from "./deck";
+
 export default class Dealer {
-  constructor(deck) {
-    this.deck = deck;
+  constructor() {
+    this.deck = new Deck();
   }
 
   dealCard(hand) {
