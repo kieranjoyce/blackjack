@@ -7,16 +7,15 @@ import Player from "./player.js";
 let playerName;
 let player;
 let dealer;
-let gameOver = false;
 
 console.log("welcome to blackjack");
 async function askPlayerName() {
-  let answer = await inquirer.prompt([
+  const answer = await inquirer.prompt([
     {
       type: "input",
       name: "playerName",
       message: "What would you like to be called?",
-      default: "Player",
+      default: "player",
     },
   ]);
 
@@ -33,11 +32,64 @@ function setupGame() {
   dealer.dealCard(player.hand);
 }
 
+function displayCards() {
+  console.log("Your cards:");
+  for (let card of player.hand.cards) {
+    console.log(`${card.suit} ${card.value}`);
+  }
+  console.log(`Your score: ${player.hand.score}`);
+}
+
+async function hitOrStand() {
+  const answer = await inquirer.prompt([
+    {
+      type: "list",
+      name: "hitOrStand",
+      message: "would you like to hit or stand",
+      choices: ["hit", "stand"],
+    },
+  ]);
+
+  if (answer.hitOrStand === "stand") {
+    player.stand();
+    console.log("stood");
+  }
+}
+
+function displayResult() {
+  if (player.isStood) {
+    console.log(`you stood at ${player.hand.score}`);
+  }
+
+  if (player.hand.isBust) {
+    console.log("you are bust");
+  }
+
+  if (player.hand.score === 21) {
+    console.log("winner, winner, chicken dinner?");
+  }
+
+  displayCards();
+}
+
 await askPlayerName();
 // log greeting and explanation of game?
 console.log(`welcome ${playerName}`);
 
 setupGame();
 
-// show cards to player (text form at first)
-// hit or stand once
+while (!player.isStood && !player.hand.isBust && player.hand.score !== 21) {
+  // show cards to player (text form at first)
+  displayCards();
+
+  // hit or stand once
+  await hitOrStand();
+
+  if (!player.isStood) {
+    dealer.dealCard(player.hand);
+
+    console.clear();
+  }
+}
+
+displayResult();
