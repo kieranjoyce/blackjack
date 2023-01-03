@@ -2,6 +2,7 @@
 
 import inquirer from "inquirer";
 import chalk from "chalk";
+import figlet from "figlet";
 
 import Dealer from "./dealer.js";
 import Player from "./player.js";
@@ -110,7 +111,7 @@ function displayResult() {
   console.clear();
   displayCards();
 
-  if (mainPlayer.isStood) {
+  if (mainPlayer.isStood || mainPlayer.hand.score === 21) {
     console.log(`you stood at ${mainPlayer.hand.score}`);
 
     let maxSimulatedPlayerScore = Math.max(
@@ -128,15 +129,25 @@ function displayResult() {
 
     console.log(
       mainPlayer.hand.score > maxSimulatedPlayerScore
-        ? chalk.bgGreen.bold("winner, winner, chicken dinner")
+        ? chalk.green(
+            figlet.textSync("WINNER WINNER CHICKEN DINNER!", {
+              // font: "Doom",
+            })
+          )
         : mainPlayer.hand.score < maxSimulatedPlayerScore
-        ? chalk.bgRed.bold("you lose")
-        : chalk.bgBlue("you tie")
+        ? chalk.bgRed.bold("LOSS")
+        : chalk.bgBlue("TIE")
     );
   }
 
   if (mainPlayer.hand.isBust) {
-    console.log("you are bust so you lose");
+    console.log(
+      chalk.red(
+        figlet.textSync("BUSTED", {
+          font: "Big Money-ne",
+        })
+      )
+    );
   }
 }
 
