@@ -3,9 +3,11 @@
 import inquirer from "inquirer";
 import Dealer from "./dealer.js";
 import Player from "./player.js";
+import SimulatedPlayer from "./simulatedPlayer.js";
 
 let playerName;
-let player;
+let mainPlayer;
+let simulatedPlayers = [];
 let dealer;
 
 console.log("welcome to blackjack");
@@ -26,18 +28,24 @@ function setupGame() {
   // create dealer
   dealer = new Dealer();
   // create player with given name
-  player = new Player(playerName);
-  // deal 2 cards to players hand
-  dealer.dealCard(player.hand);
-  dealer.dealCard(player.hand);
+  mainPlayer = new Player(playerName);
+  simulatedPlayers.push(new SimulatedPlayer("Simone"));
+  // deal 2 cards to all players hands
+  dealer.dealCard(mainPlayer.hand);
+  dealer.dealCard(mainPlayer.hand);
+
+  for (let player of simulatedPlayers) {
+    dealer.dealCard(player.hand);
+    dealer.dealCard(player.hand);
+  }
 }
 
 function displayCards() {
   console.log("Your cards:");
-  for (let card of player.hand.cards) {
+  for (let card of mainPlayer.hand.cards) {
     console.log(`${card.suit} ${card.value}`);
   }
-  console.log(`Your score: ${player.hand.score}`);
+  console.log(`Your score: ${mainPlayer.hand.score}`);
 }
 
 async function hitOrStand() {
@@ -51,7 +59,7 @@ async function hitOrStand() {
   ]);
 
   if (answer.hitOrStand === "stand") {
-    player.stand();
+    mainPlayer.stand();
     console.log("stood");
   }
 }
@@ -59,15 +67,26 @@ async function hitOrStand() {
 function displayResult() {
   displayCards();
 
-  if (player.isStood) {
-    console.log(`you stood at ${player.hand.score}`);
+  if (mainPlayer.isStood) {
+    console.log(`you stood at ${mainPlayer.hand.score}`);
+
+    let maxSimulatedPlayerScore = Math.max(
+      simulatedPlayers.map((player) =>
+        !player.hand.isBust ? player.hand.score : 0
+      )
+    );
+    console.log(`highest other player score was ${maxSimulatedPlayerScore}`);
+
+    console.log(
+      mainPlayer.hand.score > maxSimulatedPlayerScore ? "you win" : "you lose"
+    );
   }
 
-  if (player.hand.isBust) {
-    console.log("you are bust");
+  if (mainPlayer.hand.isBust) {
+    console.log("you are bust so you lose");
   }
 
-  if (player.hand.score === 21) {
+  if (mainPlayer.hand.score === 21) {
     console.log("winner, winner, chicken dinner");
   }
 }
@@ -78,17 +97,29 @@ console.log(`welcome ${playerName}`);
 
 setupGame();
 
-while (!player.isStood && !player.hand.isBust && player.hand.score !== 21) {
+while (
+  !mainPlayer.isStood &&
+  !mainPlayer.hand.isBust &&
+  mainPlayer.hand.score !== 21
+) {
   // show cards to player (text form at first)
   displayCards();
 
   // hit or stand once
   await hitOrStand();
 
-  if (!player.isStood) {
-    dealer.dealCard(player.hand);
+  if (!mainPlayer.isStood) {
+    dealer.dealCard(mainPlayer.hand);
 
     console.clear();
+  }
+
+  for (let player of simulatedPlayers) {
+    player.chooseAction();
+    if (!player.isStood && !player.hand.isBust) {
+      dealer.dealCard(player.hand);
+      console.log(`simPlayer`);
+    }
   }
 }
 
