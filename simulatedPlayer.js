@@ -8,6 +8,9 @@ export default class SimulatedPlayer extends Player {
   chooseAction() {
     if (this.hand.score >= 17 && this.isStood === false) {
       this.stand();
+      console.log(`${this.name} stands`);
+    } else {
+      console.log(`${this.name} hits`);
     }
   }
 }

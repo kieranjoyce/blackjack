@@ -62,7 +62,6 @@ async function playGame() {
     player.chooseAction();
     if (!player.isStood && !player.hand.isBust) {
       dealer.dealCard(player.hand);
-      console.log(`simPlayer hits`);
     }
   }
 
