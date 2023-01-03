@@ -57,6 +57,8 @@ async function hitOrStand() {
 }
 
 function displayResult() {
+  displayCards();
+
   if (player.isStood) {
     console.log(`you stood at ${player.hand.score}`);
   }
@@ -66,10 +68,8 @@ function displayResult() {
   }
 
   if (player.hand.score === 21) {
-    console.log("winner, winner, chicken dinner?");
+    console.log("winner, winner, chicken dinner");
   }
-
-  displayCards();
 }
 
 await askPlayerName();
