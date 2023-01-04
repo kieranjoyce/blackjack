@@ -89,14 +89,15 @@ async function playRound() {
 }
 
 function displayCards() {
-  console.log("\nYour cards:");
+  console.log("\nHand:");
 
   console.group();
   for (let card of mainPlayer.hand.cards) {
     console.log(` ${card.suit} ${card.value} `);
   }
-  console.log("\n");
   console.groupEnd();
+
+  console.log(`\nScore: ${mainPlayer.hand.score}\n`);
 }
 
 async function hitOrStand() {
@@ -132,9 +133,29 @@ function displayResult() {
   console.clear();
   displayCards();
 
-  if (mainPlayer.isStood || mainPlayer.hand.score === 21) {
-    console.log(`you stood at ${mainPlayer.hand.score}`);
+  let isSoloGame = simulatedPlayersCount === 0;
+  let winnerMessage = chalk.green(
+    figlet.textSync("WINNER WINNER\nCHICKEN DINNER!!", {
+      verticalLayout: "full",
+    })
+  );
+  let bustMessage = chalk.red(
+    figlet.textSync("BUST!!", {
+      font: "Big Money-ne",
+    })
+  );
 
+  if (mainPlayer.hand.isBust) {
+    console.log(bustMessage);
+    return;
+  }
+
+  if (isSoloGame) {
+    console.log(winnerMessage);
+    return;
+  }
+
+  if (mainPlayer.isStood || mainPlayer.hand.score === 21) {
     let maxSimulatedPlayerScore = Math.max(
       ...simulatedPlayers.map((player) => {
         return !player.hand.isBust ? player.hand.score : 0;
@@ -142,32 +163,18 @@ function displayResult() {
     );
 
     // if all simulated player busts maxSimulatedPlayerScore will be 0
-    // using || operator will print the number unless it is 0
-    // in which case it will print bust
+    // using || operator will log bust if it is 0 (meaning all simulated players bust)
+    // or log the highest non-bust score achieved if not
     console.log(
-      `highest other player score was ${maxSimulatedPlayerScore || "bust"}`
+      `Highest other player score was ${maxSimulatedPlayerScore || "bust"}`
     );
 
     console.log(
       mainPlayer.hand.score > maxSimulatedPlayerScore
-        ? chalk.green(
-            figlet.textSync("WINNER WINNER CHICKEN DINNER!!", {
-              // font: "Doom",
-            })
-          )
+        ? winnerMessage
         : mainPlayer.hand.score < maxSimulatedPlayerScore
         ? chalk.bgRed.bold("LOSS!!")
         : chalk.bgBlue("TIE!!")
-    );
-  }
-
-  if (mainPlayer.hand.isBust) {
-    console.log(
-      chalk.red(
-        figlet.textSync("BUST!!", {
-          font: "Big Money-ne",
-        })
-      )
     );
   }
 }
