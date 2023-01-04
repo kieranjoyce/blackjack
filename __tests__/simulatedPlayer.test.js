@@ -7,7 +7,7 @@ import Card from "../card.js";
 let simPlayer;
 
 beforeEach(() => {
-  simPlayer = new SimulatedPlayer("Simone");
+  simPlayer = new SimulatedPlayer();
 });
 
 describe("SimulatedPlayer class", () => {
@@ -15,8 +15,8 @@ describe("SimulatedPlayer class", () => {
     expect(simPlayer instanceof Player).toBe(true);
   });
 
-  test("should initialise with name value of first constructor argument preceded by bot", () => {
-    expect(simPlayer.name).toBe("Bot Simone");
+  test("should initialise with name value beginning with Bot followed by a randomly generated name", () => {
+    expect(simPlayer.name).toMatch(/^Bot \w+$/);
   });
 
   describe("chooseAction method", () => {

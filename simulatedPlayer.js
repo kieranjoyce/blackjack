@@ -1,7 +1,11 @@
+import { uniqueNamesGenerator, names } from "unique-names-generator";
+
 import Player from "./player.js";
 
 export default class SimulatedPlayer extends Player {
-  constructor(name) {
+  constructor() {
+    const name = uniqueNamesGenerator({ dictionaries: [names] });
+
     super(`Bot ${name}`);
   }
 
