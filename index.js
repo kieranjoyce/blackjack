@@ -35,6 +35,7 @@ async function askNumberOfOpponents() {
       name: "simulatedPlayersCount",
       message: "How many opponents would you like to face?",
       choices: [0, 1, 2, 3, 4, 5, 6, 7],
+      default: 1,
     },
   ]);
 
@@ -42,6 +43,8 @@ async function askNumberOfOpponents() {
 }
 
 function setupGame() {
+  console.clear();
+
   // create dealer
   dealer = new Dealer();
   // create player with given name
@@ -61,8 +64,15 @@ function setupGame() {
   }
 }
 
-async function playGame() {
+async function playRound() {
   // show cards to player (text form at first)
+  for (let player of simulatedPlayers) {
+    player.chooseAction();
+    if (!player.isStood && !player.hand.isBust) {
+      dealer.dealCard(player.hand);
+    }
+  }
+
   if (!isPlayerFinished(mainPlayer)) {
     displayCards();
 
@@ -71,27 +81,22 @@ async function playGame() {
 
     if (!mainPlayer.isStood) {
       dealer.dealCard(mainPlayer.hand);
-
-      console.clear();
     }
   }
 
-  for (let player of simulatedPlayers) {
-    player.chooseAction();
-    if (!player.isStood && !player.hand.isBust) {
-      dealer.dealCard(player.hand);
-    }
-  }
-
+  console.clear();
   checkGameOver();
 }
 
 function displayCards() {
-  console.log("Your cards:");
+  console.log("\nYour cards:");
+
+  console.group();
   for (let card of mainPlayer.hand.cards) {
-    console.log(`${card.suit} ${card.value}`);
+    console.log(` ${card.suit} ${card.value} `);
   }
-  console.log(`Your score: ${mainPlayer.hand.score}`);
+  console.log("\n");
+  console.groupEnd();
 }
 
 async function hitOrStand() {
@@ -99,14 +104,13 @@ async function hitOrStand() {
     {
       type: "list",
       name: "hitOrStand",
-      message: "would you like to hit or stand",
+      message: "Would you like to hit or stand",
       choices: ["hit", "stand"],
     },
   ]);
 
   if (answer.hitOrStand === "stand") {
     mainPlayer.stand();
-    console.log("stood");
   }
 }
 
@@ -133,12 +137,9 @@ function displayResult() {
 
     let maxSimulatedPlayerScore = Math.max(
       ...simulatedPlayers.map((player) => {
-        console.log(player.hand.isBust, player.hand.score);
         return !player.hand.isBust ? player.hand.score : 0;
       })
     );
-
-    console.log(maxSimulatedPlayerScore);
 
     // if all simulated player busts maxSimulatedPlayerScore will be 0
     // using || operator will print the number unless it is 0
@@ -150,20 +151,20 @@ function displayResult() {
     console.log(
       mainPlayer.hand.score > maxSimulatedPlayerScore
         ? chalk.green(
-            figlet.textSync("WINNER WINNER CHICKEN DINNER!", {
+            figlet.textSync("WINNER WINNER CHICKEN DINNER!!", {
               // font: "Doom",
             })
           )
         : mainPlayer.hand.score < maxSimulatedPlayerScore
-        ? chalk.bgRed.bold("LOSS")
-        : chalk.bgBlue("TIE")
+        ? chalk.bgRed.bold("LOSS!!")
+        : chalk.bgBlue("TIE!!")
     );
   }
 
   if (mainPlayer.hand.isBust) {
     console.log(
       chalk.red(
-        figlet.textSync("BUSTED", {
+        figlet.textSync("BUST!!", {
           font: "Big Money-ne",
         })
       )
@@ -182,7 +183,7 @@ await askNumberOfOpponents();
 setupGame();
 
 while (!isGameOver) {
-  await playGame();
+  await playRound();
 }
 
 displayResult();
