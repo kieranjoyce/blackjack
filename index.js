@@ -10,6 +10,7 @@ import SimulatedPlayer from "./simulatedPlayer.js";
 
 let playerName;
 let mainPlayer;
+let simulatedPlayersCount;
 let simulatedPlayers = [];
 let dealer;
 let isGameOver = false;
@@ -27,12 +28,29 @@ async function askPlayerName() {
   playerName = answer.playerName;
 }
 
+async function askNumberOfOpponents() {
+  const answer = await inquirer.prompt([
+    {
+      type: "list",
+      name: "simulatedPlayersCount",
+      message: "How many opponents would you like to face?",
+      choices: [0, 1, 2, 3, 4, 5, 6, 7],
+    },
+  ]);
+
+  simulatedPlayersCount = answer.simulatedPlayersCount;
+}
+
 function setupGame() {
   // create dealer
   dealer = new Dealer();
   // create player with given name
   mainPlayer = new Player(playerName);
-  simulatedPlayers.push(new SimulatedPlayer("Simone"));
+
+  for (let i = 0; i < simulatedPlayersCount; i++) {
+    simulatedPlayers.push(new SimulatedPlayer());
+  }
+
   // deal 2 cards to all players hands
   dealer.dealCard(mainPlayer.hand);
   dealer.dealCard(mainPlayer.hand);
@@ -114,10 +132,13 @@ function displayResult() {
     console.log(`you stood at ${mainPlayer.hand.score}`);
 
     let maxSimulatedPlayerScore = Math.max(
-      simulatedPlayers.map((player) =>
-        !player.hand.isBust ? player.hand.score : 0
-      )
+      ...simulatedPlayers.map((player) => {
+        console.log(player.hand.isBust, player.hand.score);
+        return !player.hand.isBust ? player.hand.score : 0;
+      })
     );
+
+    console.log(maxSimulatedPlayerScore);
 
     // if all simulated player busts maxSimulatedPlayerScore will be 0
     // using || operator will print the number unless it is 0
@@ -152,10 +173,11 @@ function displayResult() {
 
 //beginning of execution
 console.log("welcome to blackjack");
-
-await askPlayerName();
 // log greeting and explanation of game?
+await askPlayerName();
 console.log(`welcome ${playerName}`);
+
+await askNumberOfOpponents();
 
 setupGame();
 
