@@ -45,6 +45,7 @@ function setupGame() {
 
   // create dealer
   dealer = new Dealer();
+
   // create player with given name
   mainPlayer = new Player(playerName);
 
@@ -86,7 +87,6 @@ async function playRound() {
   }
 
   console.clear();
-  checkGameOver();
 }
 
 function displayCards() {
@@ -189,6 +189,7 @@ setupGame();
 
 while (!isGameOver) {
   await playRound();
+  checkGameOver();
 }
 
 displayResult();
