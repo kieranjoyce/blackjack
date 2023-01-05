@@ -25,6 +25,9 @@
     "jest": "^29.3.1"
   },
   "dependencies": {
-    "inquirer": "^9.1.4"
+    "chalk": "^5.2.0",
+    "figlet": "^1.5.2",
+    "inquirer": "^9.1.4",
+    "unique-names-generator": "^4.7.1"
   }
 }
