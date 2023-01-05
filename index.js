@@ -151,11 +151,11 @@ function displayResult() {
   }
 
   if (mainPlayer.isStood || mainPlayerScore === 21) {
-    let maxSimulatedPlayerScore = Math.max(
-      ...simulatedPlayers.map((player) => {
-        return !player.hand.isBust ? player.getHandScore() : 0;
-      })
-    );
+    let simulatedPlayerScores = simulatedPlayers.map((player) => {
+      return !player.hand.isBust ? player.getHandScore() : 0;
+    });
+
+    let maxSimulatedPlayerScore = Math.max(...simulatedPlayerScores);
 
     // if all simulated player busts maxSimulatedPlayerScore will be 0
     // using || operator will log bust if it is 0 (meaning all simulated players bust)
@@ -164,13 +164,13 @@ function displayResult() {
       `Highest other player score was ${maxSimulatedPlayerScore || "bust"}`
     );
 
-    console.log(
-      mainPlayerScore > maxSimulatedPlayerScore
-        ? winnerMessage
-        : mainPlayerScore < maxSimulatedPlayerScore
-        ? chalk.bgRed.bold("LOSS!!")
-        : chalk.bgBlue("TIE!!")
-    );
+    if (mainPlayerScore > maxSimulatedPlayerScore) {
+      console.log(winnerMessage);
+    } else if (mainPlayerScore < maxSimulatedPlayerScore) {
+      console.log(chalk.bgRed.bold("LOSS!!"));
+    } else {
+      console.log(chalk.bgBlue("TIE!!"));
+    }
   }
 }
 
