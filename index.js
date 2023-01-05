@@ -71,7 +71,7 @@ async function playRound() {
     }
   }
 
-  if (!isPlayerFinished(mainPlayer)) {
+  if (!mainPlayer.isPlayerFinished()) {
     displayCards();
 
     // hit or stand once
@@ -113,15 +113,11 @@ async function hitOrStand() {
   }
 }
 
-function isPlayerFinished(player) {
-  return player.isStood || player.hand.isBust || player.hand.score === 21;
-}
-
 function checkGameOver() {
-  let mainPlayerFinished = isPlayerFinished(mainPlayer);
+  let mainPlayerFinished = mainPlayer.isPlayerFinished();
 
   let allSimulatedPlayersFinished = simulatedPlayers.every((player) =>
-    isPlayerFinished(player)
+    player.isPlayerFinished()
   );
 
   isGameOver = mainPlayerFinished && allSimulatedPlayersFinished;
