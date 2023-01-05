@@ -68,6 +68,9 @@ async function playRound() {
     player.chooseAction();
     if (!player.isStood && !player.hand.isBust) {
       dealer.dealCard(player.hand);
+      console.log(`${player.name} hits`);
+    } else {
+      console.log(`${player.name} stands`);
     }
   }
 
