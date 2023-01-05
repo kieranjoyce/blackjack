@@ -95,7 +95,7 @@ function displayCards() {
   }
   console.groupEnd();
 
-  console.log(`\nScore: ${mainPlayer.hand.score}\n`);
+  console.log(`\nScore: ${mainPlayer.getHandScore()}\n`);
 }
 
 async function hitOrStand() {
@@ -127,6 +127,7 @@ function displayResult() {
   console.clear();
   displayCards();
 
+  let mainPlayerScore = mainPlayer.getHandScore();
   let isSoloGame = simulatedPlayersCount === 0;
   let winnerMessage = chalk.green(
     figlet.textSync("WINNER WINNER\nCHICKEN DINNER!!", {
@@ -149,10 +150,10 @@ function displayResult() {
     return;
   }
 
-  if (mainPlayer.isStood || mainPlayer.hand.score === 21) {
+  if (mainPlayer.isStood || mainPlayerScore === 21) {
     let maxSimulatedPlayerScore = Math.max(
       ...simulatedPlayers.map((player) => {
-        return !player.hand.isBust ? player.hand.score : 0;
+        return !player.hand.isBust ? player.getHandScore() : 0;
       })
     );
 
@@ -164,9 +165,9 @@ function displayResult() {
     );
 
     console.log(
-      mainPlayer.hand.score > maxSimulatedPlayerScore
+      mainPlayerScore > maxSimulatedPlayerScore
         ? winnerMessage
-        : mainPlayer.hand.score < maxSimulatedPlayerScore
+        : mainPlayerScore < maxSimulatedPlayerScore
         ? chalk.bgRed.bold("LOSS!!")
         : chalk.bgBlue("TIE!!")
     );
