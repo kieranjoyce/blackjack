@@ -14,7 +14,7 @@ let dealer;
 let isGameOver = false;
 
 async function askPlayerName() {
-  const answer = await inquirer.prompt([
+  const answers = await inquirer.prompt([
     {
       type: "input",
       name: "playerName",
@@ -23,11 +23,11 @@ async function askPlayerName() {
     },
   ]);
 
-  playerName = answer.playerName;
+  playerName = answers.playerName;
 }
 
 async function askNumberOfOpponents() {
-  const answer = await inquirer.prompt([
+  const answers = await inquirer.prompt([
     {
       type: "list",
       name: "simulatedPlayersCount",
@@ -37,7 +37,7 @@ async function askNumberOfOpponents() {
     },
   ]);
 
-  simulatedPlayersCount = answer.simulatedPlayersCount;
+  simulatedPlayersCount = answers.simulatedPlayersCount;
 }
 
 function setupGame() {
