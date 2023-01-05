@@ -47,4 +47,14 @@ describe("Player class", () => {
       expect(player.isPlayerFinished()).toBe(true);
     });
   });
+
+  test("getHandScore method should return score property of players hand", () => {
+    expect(player.getHandScore()).toBe(player.hand.score);
+
+    player.hand.addCard(new Card("♣", "K"));
+    player.hand.addCard(new Card("♠", "K"));
+    player.hand.evaluateScore();
+
+    expect(player.getHandScore()).toBe(player.hand.score);
+  });
 });

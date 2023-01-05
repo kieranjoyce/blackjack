@@ -14,4 +14,8 @@ export default class Player {
   isPlayerFinished() {
     return this.isStood || this.hand.isBust || this.hand.score === 21;
   }
+
+  getHandScore() {
+    return this.hand.score;
+  }
 }
