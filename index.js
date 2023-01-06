@@ -6,6 +6,7 @@ import Dealer from "./dealer.js";
 import Player from "./player.js";
 import SimulatedPlayer from "./simulatedPlayer.js";
 
+// global variables that will need to be accessed throughout the program
 let playerName;
 let mainPlayer;
 let simulatedPlayersCount;
@@ -49,6 +50,7 @@ function setupGame() {
   // create player with given name
   mainPlayer = new Player(playerName);
 
+  // create requested number of simulated players
   for (let i = 0; i < simulatedPlayersCount; i++) {
     simulatedPlayers.push(new SimulatedPlayer());
   }
