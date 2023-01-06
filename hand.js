@@ -9,6 +9,7 @@ export default class Hand {
     this.cards.push(card);
   }
 
+  // runs checkBust method inside to avoid an invalid hand not being recognised as bust
   evaluateScore() {
     let newScore = 0;
 

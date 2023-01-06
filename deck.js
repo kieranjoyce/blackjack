@@ -33,6 +33,8 @@ export default class Deck {
     }
   }
 
+  // taking card from random index avoids implementing a relatively intense shuffle function
+  // however does have to find new index every time new card taken
   takeCard() {
     let randomIndex = Math.floor(Math.random() * this.cards.length);
     let deletedCards = this.cards.splice(randomIndex, 1);

@@ -12,9 +12,10 @@ export default class Player {
   }
 
   isPlayerFinished() {
-    return this.isStood || this.hand.isBust || this.hand.score === 21;
+    return this.isStood || this.hand.isBust || this.getHandScore() === 21;
   }
 
+  // reduces accessing a nested property and makes more clear
   getHandScore() {
     return this.hand.score;
   }
