@@ -30,7 +30,7 @@ while (!isGameOver) {
 
 displayResult();
 
-// organised into functions to make main control flow clear
+// organised into named functions to make main control flow clear
 async function askPlayerName() {
   const answers = await inquirer.prompt([
     {
@@ -98,10 +98,10 @@ async function playRound() {
     }
   }
 
+  // user's turn
   if (!mainPlayer.isPlayerFinished()) {
     displayCards();
 
-    // hit or stand once
     await askHitOrStand();
 
     if (!mainPlayer.isStood) {
@@ -155,6 +155,7 @@ function displayResult() {
 
   let mainPlayerScore = mainPlayer.getHandScore();
   let isSoloGame = simulatedPlayersCount === 0;
+
   let winnerMessage = chalk.green(
     figlet.textSync("WINNER WINNER\nCHICKEN DINNER!!", {
       verticalLayout: "full",
