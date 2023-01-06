@@ -83,14 +83,18 @@ function setupGame() {
 }
 
 async function playRound() {
-  // show cards to player (text form at first)
+  // simulated players choose to hit or stand
+  // logs here instead of inside chooseAction to separate concerns
   for (let player of simulatedPlayers) {
-    player.chooseAction();
-    if (!player.isStood && !player.hand.isBust) {
-      dealer.dealCard(player.hand);
-      console.log(`${player.name} hits`);
-    } else {
-      console.log(`${player.name} stands`);
+    if (!player.isPlayerFinished()) {
+      player.chooseAction();
+
+      if (!player.isStood) {
+        dealer.dealCard(player.hand);
+        console.log(`${player.name} hits`);
+      } else {
+        console.log(`${player.name} stands`);
+      }
     }
   }
 
