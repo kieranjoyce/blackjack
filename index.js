@@ -169,15 +169,15 @@ function displayResult() {
 
   if (mainPlayer.hand.isBust) {
     console.log(bustMessage);
-    return;
   }
 
-  if (isSoloGame) {
+  // no other scores to compare so automatic win if not bust
+  else if (isSoloGame) {
     console.log(winnerMessage);
-    return;
   }
 
-  if (mainPlayer.isStood || mainPlayerScore === 21) {
+  // compares scores to determine result
+  else {
     let simulatedPlayerScores = simulatedPlayers.map((player) => {
       return !player.hand.isBust ? player.getHandScore() : 0;
     });
