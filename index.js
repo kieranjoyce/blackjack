@@ -178,6 +178,7 @@ function displayResult() {
 
   // compares scores to determine result
   else {
+    //converts scores of bust players to 0 so they cannot be maximum value
     let simulatedPlayerScores = simulatedPlayers.map((player) => {
       return !player.hand.isBust ? player.getHandScore() : 0;
     });
@@ -191,11 +192,18 @@ function displayResult() {
       `Highest other player score was ${maxSimulatedPlayerScore || "bust"}`
     );
 
+    // win
     if (mainPlayerScore > maxSimulatedPlayerScore) {
       console.log(winnerMessage);
-    } else if (mainPlayerScore < maxSimulatedPlayerScore) {
+    }
+
+    // loss
+    else if (mainPlayerScore < maxSimulatedPlayerScore) {
       console.log(chalk.bgRed.bold("LOSS!!"));
-    } else {
+    }
+
+    // tie
+    else {
       console.log(chalk.bgBlue("TIE!!"));
     }
   }
