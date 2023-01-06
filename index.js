@@ -102,7 +102,7 @@ async function playRound() {
     displayCards();
 
     // hit or stand once
-    await hitOrStand();
+    await askHitOrStand();
 
     if (!mainPlayer.isStood) {
       dealer.dealCard(mainPlayer.hand);
@@ -124,7 +124,7 @@ function displayCards() {
   console.log(`\nScore: ${mainPlayer.getHandScore()}\n`);
 }
 
-async function hitOrStand() {
+async function askHitOrStand() {
   const answer = await inquirer.prompt([
     {
       type: "list",
