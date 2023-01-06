@@ -14,6 +14,23 @@ let simulatedPlayers = [];
 let dealer;
 let isGameOver = false;
 
+console.log("welcome to blackjack");
+// log greeting and explanation of game?
+await askPlayerName();
+console.log(`welcome ${playerName}`);
+
+await askNumberOfOpponents();
+
+setupGame();
+
+while (!isGameOver) {
+  await playRound();
+  checkGameOver();
+}
+
+displayResult();
+
+// organised into functions to make main control flow clear
 async function askPlayerName() {
   const answers = await inquirer.prompt([
     {
@@ -178,20 +195,3 @@ function displayResult() {
     }
   }
 }
-
-//beginning of execution
-console.log("welcome to blackjack");
-// log greeting and explanation of game?
-await askPlayerName();
-console.log(`welcome ${playerName}`);
-
-await askNumberOfOpponents();
-
-setupGame();
-
-while (!isGameOver) {
-  await playRound();
-  checkGameOver();
-}
-
-displayResult();
