@@ -17,9 +17,9 @@ let isGameOver = false;
 await askPlayerName();
 
 console.log(`
-Welcome ${playerName}
+Welcome to Blackjack, ${playerName}
 
-  How to play Blackjack
+  How to play
   - Every card has a score corresponding to their face value
     2-9: points equal to the number on the card
     10, J, Q, K: 10 points
@@ -137,7 +137,7 @@ function displayCards() {
 }
 
 async function askHitOrStand() {
-  const answer = await inquirer.prompt([
+  const answers = await inquirer.prompt([
     {
       type: "list",
       name: "hitOrStand",
@@ -146,7 +146,7 @@ async function askHitOrStand() {
     },
   ]);
 
-  if (answer.hitOrStand === "stand") {
+  if (answers.hitOrStand === "stand") {
     mainPlayer.stand();
   }
 }
@@ -171,15 +171,18 @@ function displayResult() {
   let winnerMessage = chalk.green(
     figlet.textSync("WINNER WINNER\nCHICKEN DINNER!!", {
       verticalLayout: "full",
-    })
-  );
-  let bustMessage = chalk.red(
-    figlet.textSync("BUST!!", {
-      font: "Big Money-ne",
-    })
+    }),
+    `\nCongratulations, ${playerName}`
   );
 
   if (mainPlayer.hand.isBust) {
+    let bustMessage = chalk.red(
+      figlet.textSync("BUST!!", {
+        font: "Big Money-ne",
+      }),
+      `\nUnlucky, ${playerName}`
+    );
+
     console.log(bustMessage);
   }
 
@@ -190,7 +193,7 @@ function displayResult() {
 
   // compares scores to determine result
   else {
-    //converts scores of bust players to 0 so they cannot be maximum value
+    // converts scores of bust players to 0 so they cannot be maximum value
     let simulatedPlayerScores = simulatedPlayers.map((player) => {
       return !player.hand.isBust ? player.getHandScore() : 0;
     });
@@ -201,7 +204,7 @@ function displayResult() {
     // using || operator will log bust if it is 0 (meaning all simulated players bust)
     // or log the highest non-bust score achieved if not
     console.log(
-      `Highest other player score was ${maxSimulatedPlayerScore || "bust"}`
+      `Highest other player score is ${maxSimulatedPlayerScore || "bust"}\n`
     );
 
     // win
@@ -211,12 +214,26 @@ function displayResult() {
 
     // loss
     else if (mainPlayerScore < maxSimulatedPlayerScore) {
-      console.log(chalk.bgRed.bold("LOSS!!"));
+      let lossMessage = chalk.red(
+        figlet.textSync("LOSS!!", {
+          font: "Big Money-ne",
+        }),
+        `\nUnlucky, ${playerName}`
+      );
+
+      console.log(lossMessage);
     }
 
     // tie
     else {
-      console.log(chalk.bgBlue("TIE!!"));
+      let tieMessage = chalk.blue(
+        figlet.textSync("TIE!", {
+          font: "Big Money-ne",
+        }),
+        `\n So close`
+      );
+
+      console.log(tieMessage);
     }
   }
 }
