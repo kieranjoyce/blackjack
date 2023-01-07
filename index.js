@@ -49,7 +49,18 @@ async function askPlayerName() {
       type: "input",
       name: "playerName",
       message: "What would you like to be called?",
-      default: "player",
+      default: "Player",
+      validate: function (input) {
+        if (input.length > 30) {
+          return "Please enter a name containing 30 characters or less";
+        }
+
+        if (!/^[\w\s]+$/.test(input)) {
+          return "Please use only letters, numbers and spaces";
+        }
+
+        return true;
+      },
     },
   ]);
 
@@ -62,7 +73,7 @@ async function askNumberOfOpponents() {
       type: "list",
       name: "simulatedPlayersCount",
       message: "How many opponents would you like to face?",
-      choices: [0, 1, 2, 3, 4, 5, 6, 7],
+      choices: [0, 1, 2, 3, 4, 5, 6, 7, new inquirer.Separator()],
       default: 1,
     },
   ]);
