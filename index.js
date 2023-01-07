@@ -14,10 +14,22 @@ let simulatedPlayers = [];
 let dealer;
 let isGameOver = false;
 
-console.log("welcome to blackjack");
-// log greeting and explanation of game?
 await askPlayerName();
-console.log(`welcome ${playerName}`);
+
+console.log(`
+Welcome ${playerName}
+
+  How to play Blackjack
+  - Every card has a score corresponding to their face value
+    2-9: points equal to the number on the card
+    10, J, Q, K: 10 points
+    A: 11 or 1 points (your choice)
+  - Your objective is to get cards with a total score as close as possible to BUT not greater than 21
+  - You will be dealt an opening hand of two cards
+  - You then have the option to 'hit' (take another card) or 'stand' (take no more cards)
+  - If your score totals 22 or more you 'bust' and lose the game
+  - If you do not bust and have the highest scoring hand you win
+`);
 
 await askNumberOfOpponents();
 
