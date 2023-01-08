@@ -15,11 +15,21 @@ describe("Hand class", () => {
     expect(hand.isBust).toBe(false);
   });
 
-  test("addCard method should add provided card to cards array", () => {
-    hand.addCard(new Card("♥", "Q"));
-    expect(hand.cards[0]).toMatchObject({
-      suit: "♥",
-      value: "Q",
+  describe("addCard method", () => {
+    test("should add provided card to cards array", () => {
+      hand.addCard(new Card("♥", "Q"));
+      expect(hand.cards[0]).toMatchObject({
+        suit: "♥",
+        value: "Q",
+      });
+    });
+
+    test("should throw error if provided argument that is not Card object", () => {
+      function addingNonCard() {
+        hand.addCard("not a card");
+      }
+
+      expect(addingNonCard).toThrow();
     });
   });
 
