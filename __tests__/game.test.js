@@ -219,7 +219,36 @@ describe("Game class", () => {
     });
   });
 
-  describe("determineResult method", () => {
-    test("should return bust", () => {});
+  describe("calculateResult method", () => {
+    test("should return 'bust' if main players hand is bust", () => {
+      let game = new Game("Sandy", 0);
+      game.mainPlayer.hand.isBust = true;
+
+      expect(game.calculateResult()).toBe("bust");
+    });
+
+    test("should return 'win' if main players hand is not bust and there are no simulated players", () => {
+      let game = new Game("Sandy", 0);
+
+      expect(game.calculateResult()).toBe("win");
+    });
+
+    test("should return 'loss' if main players hand is not bust but has a lower score than at least one simulated player", () => {
+      let game = new Game("Sandy", 2);
+      game.mainPlayer.hand.score = 20;
+      game.simulatedPlayers[0].hand.score = 21;
+      game.simulatedPlayers[1].hand.score = 19;
+
+      expect(game.calculateResult()).toBe("loss");
+    });
+
+    test("should return 'win' if main players hand is not bust and has a higher score than all simulated players", () => {
+      let game = new Game("Sandy", 2);
+      game.mainPlayer.hand.score = 21;
+      game.simulatedPlayers[0].hand.score = 20;
+      game.simulatedPlayers[1].hand.score = 19;
+
+      expect(game.calculateResult()).toBe("win");
+    });
   });
 });

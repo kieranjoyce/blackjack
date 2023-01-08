@@ -13,6 +13,7 @@ export default class Game {
     for (let i = 0; i < simulatedPlayerCount; i++) {
       this.simulatedPlayers.push(new SimulatedPlayer());
     }
+    this.maxSimulatedPlayerScore;
 
     this.dealOpeningHand();
   }
@@ -65,5 +66,33 @@ export default class Game {
 
     if (mainPlayerFinished && allSimulatedPlayersFinished)
       this.isGameOver = true;
+  }
+
+  calculateResult() {
+    if (this.mainPlayer.hand.isBust) {
+      return "bust";
+    }
+
+    if (this.simulatedPlayers.length === 0) {
+      return "win";
+    }
+
+    let mainPlayerScore = this.mainPlayer.getHandScore();
+
+    let simulatedPlayerScores = this.simulatedPlayers.map((player) => {
+      return !player.hand.isBust ? player.getHandScore() : 0;
+    });
+
+    this.maxSimulatedPlayerScore = Math.max(...simulatedPlayerScores);
+
+    if (mainPlayerScore > this.maxSimulatedPlayerScore) {
+      return "win";
+    }
+
+    if (mainPlayerScore < this.maxSimulatedPlayerScore) {
+      return "loss";
+    }
+
+    return "tie";
   }
 }
