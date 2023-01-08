@@ -50,10 +50,10 @@ export default class Game {
       );
     }
 
-    if (!this.mainPlayer.isPlayerFinished()) {
-      if (playerChoice === "hit") {
-        this.dealer.dealCard(this.mainPlayer.hand);
-      }
+    if (playerChoice === "hit") {
+      this.dealer.dealCard(this.mainPlayer.hand);
+    } else {
+      this.mainPlayer.stand();
     }
   }
 

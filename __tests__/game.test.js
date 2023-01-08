@@ -129,41 +129,35 @@ describe("Game class", () => {
 
   describe("playMainPlayerRound method", () => {
     let game;
+    let dealCardSpy;
+    let standSpy;
 
     beforeEach(() => {
       game = new Game("Bob", 0);
+      dealCardSpy = jest.spyOn(game.dealer, "dealCard");
+      standSpy = jest.spyOn(game.mainPlayer, "stand");
     });
 
-    test("should deal a card to main players hand if called with first argument of 'hit' and main player is not finished", () => {
-      mockIsPlayerFinished(game.mainPlayer, false);
-
-      let dealCardSpy = jest.spyOn(game.dealer, "dealCard");
-
+    test("should deal a card to main players hand and not call main players stand method if called with first argument of 'hit'", () => {
       game.playMainPlayerRound("hit");
 
       expect(dealCardSpy).toHaveBeenCalledWith(game.mainPlayer.hand);
       expect(game.mainPlayer.hand.cards).toHaveLength(3);
+
+      expect(standSpy).not.toHaveBeenCalled();
     });
 
-    test("should not deal a card to main players hand if called with first argument of 'stand' and main player is not finished", () => {
-      mockIsPlayerFinished(game.mainPlayer, false);
-
-      let dealCardSpy = jest.spyOn(game.dealer, "dealCard");
-
+    test("should not deal a card to main players hand if called with first argument of 'stand'", () => {
       game.playMainPlayerRound("stand");
 
       expect(dealCardSpy).not.toHaveBeenCalled();
       expect(game.mainPlayer.hand.cards).toHaveLength(2);
     });
 
-    test("should not deal a card to main players hand if main player is finished", () => {
-      mockIsPlayerFinished(game.mainPlayer, true);
-      let dealCardSpy = jest.spyOn(game.dealer, "dealCard");
+    test("should call main players stand method if called with first argument of 'stand'", () => {
+      game.playMainPlayerRound("stand");
 
-      game.playMainPlayerRound("hit");
-
-      expect(dealCardSpy).not.toHaveBeenCalled();
-      expect(game.mainPlayer.hand.cards).toHaveLength(2);
+      expect(standSpy).toHaveBeenCalled();
     });
 
     test("should throw error if called without first argument of hit or stand", () => {
