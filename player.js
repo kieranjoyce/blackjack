@@ -5,14 +5,18 @@ export default class Player {
     this.name = name;
     this.hand = new Hand();
     this.isStood = false;
-    this.wins = 0;
   }
 
   stand() {
     this.isStood = true;
   }
 
-  addWin() {
-    this.wins++;
+  isPlayerFinished() {
+    return this.isStood || this.hand.isBust || this.getHandScore() === 21;
+  }
+
+  // reduces accessing a nested property and makes more clear
+  getHandScore() {
+    return this.hand.score;
   }
 }

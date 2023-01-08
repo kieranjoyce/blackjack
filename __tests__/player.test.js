@@ -1,3 +1,4 @@
+import Card from "../card";
 import Player from "../player";
 
 let player;
@@ -17,9 +18,43 @@ describe("Player class", () => {
     expect(player.isStood).toBe(true);
   });
 
-  test("addWin method should add one to wins property", () => {
-    player.addWin();
+  describe("isPlayerFinished method", () => {
+    test("should return false if no endgame condition is true", () => {
+      expect(player.isPlayerFinished()).toBe(false);
+    });
 
-    expect(player.wins).toBe(1);
+    test("should return true if players isStood property is true", () => {
+      player.stand();
+
+      expect(player.isPlayerFinished()).toBe(true);
+    });
+
+    test("should return true if players hand isBust property is true", () => {
+      player.hand.addCard(new Card("♣", "K"));
+      player.hand.addCard(new Card("♠", "K"));
+      player.hand.addCard(new Card("♥", "K"));
+      player.hand.evaluateScore();
+
+      expect(player.isPlayerFinished()).toBe(true);
+    });
+
+    test("should return true if players hand score is 21", () => {
+      player.hand.addCard(new Card("♣", "K"));
+      player.hand.addCard(new Card("♠", "K"));
+      player.hand.addCard(new Card("♥", "A"));
+      player.hand.evaluateScore();
+
+      expect(player.isPlayerFinished()).toBe(true);
+    });
+  });
+
+  test("getHandScore method should return score property of players hand", () => {
+    expect(player.getHandScore()).toBe(player.hand.score);
+
+    player.hand.addCard(new Card("♣", "K"));
+    player.hand.addCard(new Card("♠", "K"));
+    player.hand.evaluateScore();
+
+    expect(player.getHandScore()).toBe(player.hand.score);
   });
 });

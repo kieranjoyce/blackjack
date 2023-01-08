@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import inquirer from "inquirer";
 import chalk from "chalk";
 import figlet from "figlet";
@@ -8,6 +6,7 @@ import Dealer from "./dealer.js";
 import Player from "./player.js";
 import SimulatedPlayer from "./simulatedPlayer.js";
 
+// global variables that will need to be accessed throughout the program
 let playerName;
 let mainPlayer;
 let simulatedPlayersCount;
@@ -15,31 +14,71 @@ let simulatedPlayers = [];
 let dealer;
 let isGameOver = false;
 
+await askPlayerName();
+
+console.log(`
+Welcome to Blackjack, ${playerName}
+
+  How to play
+  - Every card has a score corresponding to their face value
+    2-9: points equal to the number on the card
+    10, J, Q, K: 10 points
+    A: 11 or 1 points (your choice)
+  - Your objective is to get cards with a total score as close as possible to BUT not greater than 21
+  - You will be dealt an opening hand of two cards
+  - You then have the option to 'hit' (take another card) or 'stand' (take no more cards)
+  - If your score totals 22 or more you 'bust' and lose the game
+  - If you do not bust and have the highest scoring hand you win
+`);
+
+await askNumberOfOpponents();
+
+setupGame();
+
+while (!isGameOver) {
+  await playRound();
+  checkGameOver();
+}
+
+displayResult();
+
+// organised into named functions to make main control flow clear
 async function askPlayerName() {
-  const answer = await inquirer.prompt([
+  const answers = await inquirer.prompt([
     {
       type: "input",
       name: "playerName",
       message: "What would you like to be called?",
-      default: "player",
+      default: "Player",
+      validate: function (input) {
+        if (input.length > 30) {
+          return "Please enter a name containing 30 characters or less";
+        }
+
+        if (!/^[\w\s]+$/.test(input)) {
+          return "Please use only letters, numbers and spaces";
+        }
+
+        return true;
+      },
     },
   ]);
 
-  playerName = answer.playerName;
+  playerName = answers.playerName;
 }
 
 async function askNumberOfOpponents() {
-  const answer = await inquirer.prompt([
+  const answers = await inquirer.prompt([
     {
       type: "list",
       name: "simulatedPlayersCount",
       message: "How many opponents would you like to face?",
-      choices: [0, 1, 2, 3, 4, 5, 6, 7],
+      choices: [0, 1, 2, 3, 4, 5, 6, 7, new inquirer.Separator()],
       default: 1,
     },
   ]);
 
-  simulatedPlayersCount = answer.simulatedPlayersCount;
+  simulatedPlayersCount = answers.simulatedPlayersCount;
 }
 
 function setupGame() {
@@ -47,9 +86,11 @@ function setupGame() {
 
   // create dealer
   dealer = new Dealer();
+
   // create player with given name
   mainPlayer = new Player(playerName);
 
+  // create requested number of simulated players
   for (let i = 0; i < simulatedPlayersCount; i++) {
     simulatedPlayers.push(new SimulatedPlayer());
   }
@@ -65,19 +106,26 @@ function setupGame() {
 }
 
 async function playRound() {
-  // show cards to player (text form at first)
+  // simulated players choose to hit or stand
+  // logs here instead of inside chooseAction to separate concerns
   for (let player of simulatedPlayers) {
-    player.chooseAction();
-    if (!player.isStood && !player.hand.isBust) {
-      dealer.dealCard(player.hand);
+    if (!player.isPlayerFinished()) {
+      player.chooseAction();
+
+      if (!player.isStood) {
+        dealer.dealCard(player.hand);
+        console.log(`${player.name} hits`);
+      } else {
+        console.log(`${player.name} stands`);
+      }
     }
   }
 
-  if (!isPlayerFinished(mainPlayer)) {
+  // user's turn
+  if (!mainPlayer.isPlayerFinished()) {
     displayCards();
 
-    // hit or stand once
-    await hitOrStand();
+    await askHitOrStand();
 
     if (!mainPlayer.isStood) {
       dealer.dealCard(mainPlayer.hand);
@@ -85,7 +133,6 @@ async function playRound() {
   }
 
   console.clear();
-  checkGameOver();
 }
 
 function displayCards() {
@@ -97,11 +144,11 @@ function displayCards() {
   }
   console.groupEnd();
 
-  console.log(`\nScore: ${mainPlayer.hand.score}\n`);
+  console.log(`\nScore: ${mainPlayer.getHandScore()}\n`);
 }
 
-async function hitOrStand() {
-  const answer = await inquirer.prompt([
+async function askHitOrStand() {
+  const answers = await inquirer.prompt([
     {
       type: "list",
       name: "hitOrStand",
@@ -110,20 +157,16 @@ async function hitOrStand() {
     },
   ]);
 
-  if (answer.hitOrStand === "stand") {
+  if (answers.hitOrStand === "stand") {
     mainPlayer.stand();
   }
 }
 
-function isPlayerFinished(player) {
-  return player.isStood || player.hand.isBust || player.hand.score === 21;
-}
-
 function checkGameOver() {
-  let mainPlayerFinished = isPlayerFinished(mainPlayer);
+  let mainPlayerFinished = mainPlayer.isPlayerFinished();
 
   let allSimulatedPlayersFinished = simulatedPlayers.every((player) =>
-    isPlayerFinished(player)
+    player.isPlayerFinished()
   );
 
   isGameOver = mainPlayerFinished && allSimulatedPlayersFinished;
@@ -133,64 +176,75 @@ function displayResult() {
   console.clear();
   displayCards();
 
+  let mainPlayerScore = mainPlayer.getHandScore();
   let isSoloGame = simulatedPlayersCount === 0;
+
   let winnerMessage = chalk.green(
     figlet.textSync("WINNER WINNER\nCHICKEN DINNER!!", {
       verticalLayout: "full",
-    })
-  );
-  let bustMessage = chalk.red(
-    figlet.textSync("BUST!!", {
-      font: "Big Money-ne",
-    })
+    }),
+    `\nCongratulations, ${playerName}`
   );
 
   if (mainPlayer.hand.isBust) {
-    console.log(bustMessage);
-    return;
-  }
-
-  if (isSoloGame) {
-    console.log(winnerMessage);
-    return;
-  }
-
-  if (mainPlayer.isStood || mainPlayer.hand.score === 21) {
-    let maxSimulatedPlayerScore = Math.max(
-      ...simulatedPlayers.map((player) => {
-        return !player.hand.isBust ? player.hand.score : 0;
-      })
+    let bustMessage = chalk.red(
+      figlet.textSync("BUST!!", {
+        font: "Big Money-ne",
+      }),
+      `\nUnlucky, ${playerName}`
     );
+
+    console.log(bustMessage);
+  }
+
+  // no other scores to compare so automatic win if not bust
+  else if (isSoloGame) {
+    console.log(winnerMessage);
+  }
+
+  // compares scores to determine result
+  else {
+    // converts scores of bust players to 0 so they cannot be maximum value
+    let simulatedPlayerScores = simulatedPlayers.map((player) => {
+      return !player.hand.isBust ? player.getHandScore() : 0;
+    });
+
+    let maxSimulatedPlayerScore = Math.max(...simulatedPlayerScores);
 
     // if all simulated player busts maxSimulatedPlayerScore will be 0
     // using || operator will log bust if it is 0 (meaning all simulated players bust)
     // or log the highest non-bust score achieved if not
     console.log(
-      `Highest other player score was ${maxSimulatedPlayerScore || "bust"}`
+      `Highest other player score is ${maxSimulatedPlayerScore || "bust"}\n`
     );
 
-    console.log(
-      mainPlayer.hand.score > maxSimulatedPlayerScore
-        ? winnerMessage
-        : mainPlayer.hand.score < maxSimulatedPlayerScore
-        ? chalk.bgRed.bold("LOSS!!")
-        : chalk.bgBlue("TIE!!")
-    );
+    // win
+    if (mainPlayerScore > maxSimulatedPlayerScore) {
+      console.log(winnerMessage);
+    }
+
+    // loss
+    else if (mainPlayerScore < maxSimulatedPlayerScore) {
+      let lossMessage = chalk.red(
+        figlet.textSync("LOSS!!", {
+          font: "Big Money-ne",
+        }),
+        `\nUnlucky, ${playerName}`
+      );
+
+      console.log(lossMessage);
+    }
+
+    // tie
+    else {
+      let tieMessage = chalk.blue(
+        figlet.textSync("TIE!", {
+          font: "Big Money-ne",
+        }),
+        `\n So close`
+      );
+
+      console.log(tieMessage);
+    }
   }
 }
-
-//beginning of execution
-console.log("welcome to blackjack");
-// log greeting and explanation of game?
-await askPlayerName();
-console.log(`welcome ${playerName}`);
-
-await askNumberOfOpponents();
-
-setupGame();
-
-while (!isGameOver) {
-  await playRound();
-}
-
-displayResult();
