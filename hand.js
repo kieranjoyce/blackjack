@@ -1,3 +1,5 @@
+import Card from "./card.js";
+
 export default class Hand {
   constructor() {
     this.cards = [];
@@ -6,6 +8,10 @@ export default class Hand {
   }
 
   addCard(card) {
+    if (!(card instanceof Card)) {
+      throw new Error("attempted to add non-card items to a cards array");
+    }
+
     this.cards.push(card);
   }
 
