@@ -1,6 +1,14 @@
 # Blackjack
 
-A game of blackjack that can be played in the terminal, built in JavaScript.
+A game of blackjack that is playable in the terminal, dealing the user an opening hand, displaying the hand to the user, allowing the user to choose to hit or stand, and displaying the results to the user when the game is over. The user can also choose to include the desired amount of simulated players that use a standard strategy to compete against for the highest score (that doesn't go bust). 
+
+## Technologies used
+The project is built in JavaScript using an Object-oriented approach and runs in Node.js. Unit testing is performed using the Jest framework.
+Other packages used:
+- Inquirer:  taking user input in the terminal
+- Figlet: creating ASCII art from text
+- chalk: terminal string styling
+- unique-names-generator: generate names for simulated players
 
 ## Prerequisites
 
