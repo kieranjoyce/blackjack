@@ -31,6 +31,7 @@ export function displayHand(player) {
 }
 
 export function displayResult(result, maxSimulatedPlayerScore, playerName) {
+  // maxSimulatedPlayerScore not given a value if player goes bust or there are no simulated players
   if (typeof maxSimulatedPlayerScore === "number") {
     // if all simulated player busts maxSimulatedPlayerScore will be 0
     // using || operator will log bust if it is 0 (meaning all simulated players bust)
